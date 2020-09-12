@@ -1,6 +1,9 @@
 # train.py
 
 from tqdm import tqdm
+import torch.nn.functional as F
+
+from . import models
 
 def train(model, device, train_loader, optimizer, epoch, opts, hyper_params):
   model.train()
@@ -26,7 +29,7 @@ def train(model, device, train_loader, optimizer, epoch, opts, hyper_params):
     # Calculate loss
     loss = F.nll_loss(y_pred, target)
     # L1 Regularization
-    if ModelOpts.L1 in opts:
+    if models.ModelOpts.L1 in opts:
       l1_lambda = hyper_params.get("l1_lambda", 0.1)
       loss = l1_loss(model, loss, l1_lambda)
 
