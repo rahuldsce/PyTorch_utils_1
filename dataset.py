@@ -2,7 +2,7 @@
 # dataset.py
 
 from torchvision import datasets
-import transforms
+from . import transforms
 
 def mnist():
   train_transforms, test_transforms = transforms.mnist_transforms()
