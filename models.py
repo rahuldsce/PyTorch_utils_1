@@ -1,5 +1,8 @@
 # models.py
 
+import torch.nn as nn
+import torch.nn.functional as F
+
 class ModelOpts:
     L1 = "L1"
     L2 = "L2"
