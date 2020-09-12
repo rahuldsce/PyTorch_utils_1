@@ -123,7 +123,7 @@ class CIFAR10_S7(nn.Module):
       return nn.Sequential(nn.Conv2d(in_channels=in_channels, out_channels=10, kernel_size = kernel_size, padding = 0, bias = False))
 
     def __init__(self, opts=[]):
-        super(Net, self).__init__()
+        super(CIFAR10_S7, self).__init__()
         self.conv1 = self.conv_block(3, 64, 3)
         self.conv2 = self.conv_block(64, 128, 3)
         self.trans1 = self.trans_block(128, 32)
