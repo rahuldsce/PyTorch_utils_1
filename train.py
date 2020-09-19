@@ -5,7 +5,7 @@ import torch.nn.functional as F
 
 from . import models
 
-def train(model, device, train_loader, optimizer, epoch, opts, hyper_params):
+def train(model, device, train_loader, optimizer, criterion, epoch, opts, hyper_params):
   model.train()
   pbar = tqdm(train_loader)
   correct = 0
@@ -27,7 +27,7 @@ def train(model, device, train_loader, optimizer, epoch, opts, hyper_params):
     y_pred = model(data)
 
     # Calculate loss
-    loss = F.nll_loss(y_pred, target)
+    loss = criterion(y_pred, target)
     # L1 Regularization
     if models.ModelOpts.L1 in opts:
       l1_lambda = hyper_params.get("l1_lambda", 0.1)
