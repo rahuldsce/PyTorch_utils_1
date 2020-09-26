@@ -1,7 +1,7 @@
 # transforms.py
 from torchvision import transforms
 from albumentations import (
-   Rotate, ShiftScaleRotate, HueSaturationValue, RandomCrop, HorizontalFlip, Normalize
+   Rotate, ShiftScaleRotate, HueSaturationValue, RandomCrop, HorizontalFlip, Normalize, ToFloat
 )
 from albumentations.pytorch import ToTensorV2
 
@@ -31,12 +31,12 @@ def cifar10_transforms():
     RandomCrop(32, 32),
     HorizontalFlip(),
     Normalize(mean=[0.4914, 0.4822, 0.4465], std=[0.2023, 0.1994, 0.2010]),
-    ToTensorV2()
+    ToFloat(max_value=255)
   ])
 
   transform_test = transforms.Compose([
       Normalize(mean=[0.4914, 0.4822, 0.4465], std=[0.2023, 0.1994, 0.2010]),
-      ToTensorV2()
+      ToFloat(max_value=255)
   ])
   
   return transform_train, transform_test
