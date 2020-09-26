@@ -1,5 +1,4 @@
 # transforms.py
-pip install albumentations
 from torchvision import transforms
 from albumentations import (
    Rotate,
