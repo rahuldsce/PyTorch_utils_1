@@ -28,10 +28,8 @@ def mnist_transforms():
 # Train Phase transformations
 def cifar10_transforms():
   transform_train = transforms.Compose([
-    transforms.ToPILImage(),
     RandomCrop(32, 32),
     HorizontalFlip(),
-    transforms.ToTensor(),
     Normalize(mean=[0.4914, 0.4822, 0.4465], std=[0.2023, 0.1994, 0.2010]),
     ToTensorV2()
   ])
