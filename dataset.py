@@ -54,7 +54,7 @@ def cifar10_albumentations():
     num_channels = 3
     num_classes = 10
 
-    cifar10DataMgr = DatasetManager("https://www.cs.toronto.edu/~kriz/cifar-10-python.tar.gz", "cifar-10-data", "cifar-10-batches-py", img_size, num_channels, num_classes)
+    cifar10DataMgr = DatasetManager(data_url, "cifar-10-data", "cifar-10-batches-py", img_size, num_channels, num_classes)
 
     # Download and extract CIFAR-10 data
     cifar10DataMgr.maybe_download_and_extract()
