@@ -1,15 +1,15 @@
 # transforms.py
 from torchvision import transforms
 from albumentations import (
-   Rotate,
+   Rotate, ShiftScaleRotate, HueSaturationValue
 )
 
 # Train Phase transformations
 def mnist_transforms():
   train_transforms = transforms.Compose([
                                         Rotate(7.0, value=1),
-                                        transforms.RandomAffine(degrees=20, translate=(0.1,0.1), scale=(0.9, 1.1)),
-                                        transforms.ColorJitter(brightness=0.10, contrast=0.1, saturation=0.10, hue=0.1),
+                                        ShiftScaleRotate(rotate_limit=20, shift_limit=(0.1,0.1), scale_limit=(0.9, 1.1)),
+                                        HueSaturationValue(val_shift_limit=0.10, sat_shift_limit=0.10, hue_shift_limit=0.1),
                                         transforms.ToTensor(),
                                         transforms.Normalize((0.1307,), (0.3081,)) # The mean and std have to be sequences (e.g., tuples), therefore you should add a comma after the values. 
                                         ])
