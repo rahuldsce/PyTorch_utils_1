@@ -11,6 +11,7 @@ import matplotlib.pyplot as plt
 class DatasetManager(object):
 
     def __init__(self, data_url, dataset_name, dataset_dir, img_size, num_channels, num_classes):
+        super(DatasetManager, self).__init__()
         # URL for the data-set on the internet.
         self.data_url = data_url
 
