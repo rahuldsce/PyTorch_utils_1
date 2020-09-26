@@ -5,7 +5,7 @@ from torchvision import transforms
 # Train Phase transformations
 def mnist_transforms():
   train_transforms = transforms.Compose([
-                                        Rotate(7.0, value=1),
+                                        transforms.RandomRotation((-7.0,7.0), fill=(1,)),
                                         ShiftScaleRotate(rotate_limit=20, shift_limit=(0.1,0.1), scale_limit=(0.9, 1.1)),
                                         HueSaturationValue(val_shift_limit=0.10, sat_shift_limit=0.10, hue_shift_limit=0.1),
                                         transforms.ToTensor(),
