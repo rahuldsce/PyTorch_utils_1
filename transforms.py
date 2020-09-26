@@ -26,7 +26,7 @@ def mnist_transforms():
 # Train Phase transformations
 def cifar10_transforms():
   transform_train = transforms.Compose([
-    RandomCrop(32, 32, padding=4),
+    RandomCrop(32, 32),
     HorizontalFlip(),
     transforms.ToTensor(),
     transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010)),
