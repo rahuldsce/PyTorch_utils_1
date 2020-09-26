@@ -28,15 +28,15 @@ def mnist_transforms():
 # Train Phase transformations
 def cifar10_transforms():
   transform_train = transforms.Compose([
-    RandomCrop(32, 32),
-    HorizontalFlip(),
-    Normalize(mean=[0.4914, 0.4822, 0.4465], std=[0.2023, 0.1994, 0.2010]),
-    ToFloat(max_value=255)
-  ])
+     transforms.RandomCrop(32, padding=4),
+     transforms.RandomHorizontalFlip(),
+     transforms.ToTensor(),
+     transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010)),
+   ])
 
-  transform_test = transforms.Compose([
-      Normalize(mean=[0.4914, 0.4822, 0.4465], std=[0.2023, 0.1994, 0.2010]),
-      ToFloat(max_value=255)
-  ])
+   transform_test = transforms.Compose([
+       transforms.ToTensor(),
+       transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010)),
+   ])
   
   return transform_train, transform_test
