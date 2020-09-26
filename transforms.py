@@ -1,11 +1,14 @@
 # transforms.py
-
+pip install albumentations
 from torchvision import transforms
+from albumentations import (
+   Rotate,
+)
 
 # Train Phase transformations
 def mnist_transforms():
   train_transforms = transforms.Compose([
-                                        transforms.RandomRotation((-7.0,7.0), fill=(1,)),
+                                        Rotate(7.0, value=1),
                                         transforms.RandomAffine(degrees=20, translate=(0.1,0.1), scale=(0.9, 1.1)),
                                         transforms.ColorJitter(brightness=0.10, contrast=0.1, saturation=0.10, hue=0.1),
                                         transforms.ToTensor(),
