@@ -1,7 +1,7 @@
 # transforms.py
 from torchvision import transforms
 from albumentations import (
-   Rotate, ShiftScaleRotate, HueSaturationValue
+   Rotate, ShiftScaleRotate, HueSaturationValue, RandomCrop, HorizontalFlip
 )
 
 # Train Phase transformations
@@ -26,8 +26,8 @@ def mnist_transforms():
 # Train Phase transformations
 def cifar10_transforms():
   transform_train = transforms.Compose([
-    transforms.RandomCrop(32, padding=4),
-    transforms.RandomHorizontalFlip(),
+    RandomCrop(32, 32, padding=4),
+    HorizontalFlip(),
     transforms.ToTensor(),
     transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010)),
   ])
