@@ -119,3 +119,48 @@ def show_cam_on_image(img, mask):
     cam = cam / np.max(cam)
     imgplot = plt.imshow(cam)
     plt.show()
+
+from pytorch_utils import gradcam
+import cv2
+import torch
+
+# Show misclassified images with respect to a model
+def gradcam_misclassified_images_from_model(model, model_path, data_loader, class_labels, image_count, feature_module, target_layer_names):
+  use_cuda = torch.cuda.is_available()
+  device = torch.device("cuda" if use_cuda else "cpu")
+
+  grad_cam = GradCam(model=model, feature_module=feature_module, \
+                    target_layer_names=target_layer_names, use_cuda=use_cuda)
+
+  correct = 0
+  figure = plt.figure(figsize=(20,20))
+  count = 0
+  for data, target in testloader:
+      data, target = data.to(device), target.to(device)
+      output = net(data)
+      pred = output.argmax(dim=1, keepdim=True)  # get the index of the max log-probability
+
+      for idx in range(len(pred)):
+        i_pred, i_act = pred[idx], target[idx]
+        if i_pred == i_act:
+          continue
+
+        annotation = "Actual: %s, Predicted: %s" % (class_labels[i_act], class_labels[i_pred])
+        count += 1
+        plt.subplot(image_count/5, 5, count)
+        plt.axis('off')
+
+
+        target_index = None
+        grad_img = data[idx].unsqueeze_(0)
+        show_img = data[idx].cpu().numpy().transpose(1,2,0)
+        mask = grad_cam(grad_img, target_index)
+        heatmap = cv2.applyColorMap(np.uint8(255 * mask), cv2.COLORMAP_JET)
+        heatmap = np.float32(heatmap) / 255
+        cam = heatmap + np.float32(show_img)
+        img = cam / np.max(cam)
+
+        plt.imshow(img, cmap='gray_r')
+        plt.annotate(annotation, xy=(0,0), xytext=(0,-1.2), fontsize=13)
+        if count == image_count:
+          return
