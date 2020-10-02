@@ -120,12 +120,8 @@ def show_cam_on_image(img, mask):
     imgplot = plt.imshow(cam)
     plt.show()
 
-from pytorch_utils import gradcam
-import cv2
-import torch
-
 # Show misclassified images with respect to a model
-def gradcam_misclassified_images_from_model(model, model_path, data_loader, class_labels, image_count, feature_module, target_layer_names):
+def gradcam_misclassified_images_from_model(model, data_loader, class_labels, image_count, feature_module, target_layer_names):
   use_cuda = torch.cuda.is_available()
   device = torch.device("cuda" if use_cuda else "cpu")
 
@@ -135,9 +131,9 @@ def gradcam_misclassified_images_from_model(model, model_path, data_loader, clas
   correct = 0
   figure = plt.figure(figsize=(20,20))
   count = 0
-  for data, target in testloader:
+  for data, target in data_loader:
       data, target = data.to(device), target.to(device)
-      output = net(data)
+      output = model(data)
       pred = output.argmax(dim=1, keepdim=True)  # get the index of the max log-probability
 
       for idx in range(len(pred)):
