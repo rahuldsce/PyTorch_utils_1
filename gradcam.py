@@ -121,7 +121,8 @@ def show_cam_on_image(img, mask):
     plt.show()
 
 # Show misclassified images with respect to a model
-def gradcam_misclassified_images_from_model(model, data_loader, class_labels, image_count, feature_module, target_layer_names):
+# Show misclassified images with respect to a model
+def gradcam_misclassified_images_from_model(model, data_loader, class_labels, image_count, feature_module, target_layer_names, inv_norm=None, heatmap_opacity=1):
   use_cuda = torch.cuda.is_available()
   device = torch.device("cuda" if use_cuda else "cpu")
 
@@ -129,7 +130,7 @@ def gradcam_misclassified_images_from_model(model, data_loader, class_labels, im
                     target_layer_names=target_layer_names, use_cuda=use_cuda)
 
   correct = 0
-  figure = plt.figure(figsize=(20,20))
+  figure = plt.figure(figsize=(8,12))
   count = 0
   for data, target in data_loader:
       data, target = data.to(device), target.to(device)
@@ -141,22 +142,24 @@ def gradcam_misclassified_images_from_model(model, data_loader, class_labels, im
         if i_pred == i_act:
           continue
 
-        annotation = "Actual: %s, Predicted: %s" % (class_labels[i_act], class_labels[i_pred])
+        annotation = "Actual: %s\nPredicted: %s" % (class_labels[i_act], class_labels[i_pred])
         count += 1
         plt.subplot(image_count/5, 5, count)
         plt.axis('off')
 
-
         target_index = None
         grad_img = data[idx].unsqueeze_(0)
-        show_img = data[idx].cpu().numpy().transpose(1,2,0)
+        if inv_norm:
+            show_img = inv_norm(data[idx]).cpu().numpy().transpose(1,2,0)
+        else:
+            show_img = data[idx].cpu().numpy().transpose(1,2,0)
+
         mask = grad_cam(grad_img, target_index)
         heatmap = cv2.applyColorMap(np.uint8(255 * mask), cv2.COLORMAP_JET)
         heatmap = np.float32(heatmap) / 255
-        cam = heatmap + np.float32(show_img)
+        cam = heatmap * heatmap_opacity + np.float32(show_img)
         img = cam / np.max(cam)
-
         plt.imshow(img, cmap='gray_r')
-        plt.annotate(annotation, xy=(0,0), xytext=(0,-1.2), fontsize=13)
+        plt.annotate(annotation, xy=(0,0), xytext=(0,-1.2), fontsize=10)
         if count == image_count:
           return
