@@ -205,7 +205,7 @@ class CIFAR10_DAVID_RES_NET(nn.Module):
               nn.ReLU())
 
     def __init__(self, opts=[]):
-        super(CIFAR10_S7, self).__init__()
+        super(CIFAR10_DAVID_RES_NET, self).__init__()
         
         # Prep Layer
         self.prep_layer = self.prep_block(3, 64, 3)
