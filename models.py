@@ -179,7 +179,80 @@ class BasicBlock(nn.Module):
         out += self.shortcut(x)
         out = F.relu(out)
         return out
+
+class CIFAR10_DAVID_RES_NET(nn.Module):
+    
+    def prep_block (self, in_channels, out_channels, kernel_size, padding = 1, stride=1) :
+        return nn.Sequential(
+              nn.Conv2d (in_channels = in_channels, out_channels = out_channels, kernel_size = kernel_size, padding = padding, stride=stride, bias = False),
+              nn.BatchNorm2d(out_channels),
+              nn.ReLU())
         
+    def conv_block (self, in_channels, out_channels, kernel_size, padding = 1, stride=1) :
+        return nn.Sequential(
+              nn.Conv2d (in_channels = in_channels, out_channels = out_channels, kernel_size = kernel_size, padding = padding, stride=stride, bias = False),
+              nn.MaxPool2d(2, 2),
+              nn.BatchNorm2d(out_channels),
+              nn.ReLU())
+        
+    def res_block (self, in_channels, out_channels, kernel_size, padding = 1, stride=1) :
+        return nn.Sequential(
+              nn.Conv2d (in_channels = in_channels, out_channels = out_channels, kernel_size = kernel_size, padding = padding, stride=stride, bias = False),
+              nn.BatchNorm2d(out_channels),
+              nn.ReLU(),
+              nn.Conv2d (in_channels = in_channels, out_channels = out_channels, kernel_size = kernel_size, padding = padding, stride=stride, bias = False),
+              nn.BatchNorm2d(out_channels),
+              nn.ReLU())
+
+    def __init__(self, opts=[]):
+        super(CIFAR10_S7, self).__init__()
+        
+        # Prep Layer
+        self.prep_layer = self.prep_block(3, 64, 3)
+        
+        # Layer 1
+        self.conv_l1 = self.conv_block(64, 128, 3)
+        self.res_block_l1 = self.res_block(128, 128, 3)
+        
+        # Layer 2
+        self.conv_l2 = self.conv_block(128, 256, 3)
+        
+        # Layer 3
+        self.conv_l3 = self.conv_block(256, 512, 3)
+        self.res_block_l3 = self.res_block(512, 512, 3)
+        
+        # Pool
+        self.pool = nn.MaxPool2d(4, 4)
+        
+        # FC Layer
+        self.FC = nn.Linear(512, 10)
+
+    def forward(self, x):
+        # Prep Layer
+        x = self.prep_layer(x)
+        
+        # Layer 1
+        x = self.conv_l1(x)
+        R1 = self.res_block_l1(x)
+        x = x + R1
+
+        # Layer 2
+        x = self.conv_l2(x)
+        
+        # Layer 3
+        x = self.conv_l3(x)
+        R2 = self.res_block_l3(x)
+        x = x + R2
+        
+        # Pool
+        x = self.pool(x)
+        
+        # FC Layer
+        x = self.FC(x.view(x.size(0), -1))
+
+        x = x.view(-1, 10)
+        return F.log_softmax(x, dim=-1)
+    
 class CIFAR10_RESNET_S8(nn.Module) :
 
     def __init__(self, block, num_blocks, num_classes=10):
