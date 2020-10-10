@@ -22,8 +22,11 @@ def cifar10():
   test = datasets.CIFAR10(root='./data', train=False, download=True, transform=test_transforms)
   return train, test
 
-
 class CIFAR10Sequence(Dataset):
+    def randomPadding(self, x):
+      y = np.pad(x, ((4,4), (4,4), (0,0)), mode='constant')
+      return y
+    
     def __init__(self, x_set, y_set, transform=None):
       self.x = x_set
       self.y = y_set
@@ -33,7 +36,7 @@ class CIFAR10Sequence(Dataset):
         return len(self.x)
 
     def __getitem__(self, index):
-      image = self.transform(image=self.x[index])["image"]
+      image = self.transform(image=self.randomPadding(self.x[index]))["image"]
       return image, self.y[index]
 
 
