@@ -1,5 +1,7 @@
 # dataset.py
 
+import numpy as np
+
 import albumentations as A
 from albumentations.pytorch import ToTensorV2
 
@@ -24,8 +26,7 @@ def cifar10():
 
 class CIFAR10Sequence(Dataset):
     def randomPadding(self, x):
-      y = np.pad(x, ((4,4), (4,4), (0,0)), mode='constant')
-      return y
+      return np.pad(x, ((4,4), (4,4), (0,0)), mode='constant')
     
     def __init__(self, x_set, y_set, transform=None):
       self.x = x_set
