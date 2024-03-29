@@ -43,8 +43,11 @@ class CIFAR10Sequence(Dataset):
 
 def cifar10_albumentations():
     AUGMENTATIONS_TRAIN = A.Compose([
-                                A.RandomCrop(32, 32),
-                                A.HorizontalFlip(),
+                                A.HorizontalFlip(p=0.5),
+                                A.ShiftScaleRotate(),
+                                A.CoarseDropout(max_holes=1, max_height=16, max_width=16,  # Corrected parameters
+                                                min_holes=1, min_height=16, min_width=16,   # Corrected parameters
+                                                fill_value=(0.5, 0.5, 0.5), mask_fill_value=None),
                                 A.Normalize(mean=(0.4914, 0.4822, 0.4465), std=(0.2023, 0.1994, 0.2010)),
                                 ToTensorV2()
                                 ])
