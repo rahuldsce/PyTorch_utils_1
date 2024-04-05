@@ -82,8 +82,8 @@ def cifar10_s10_albumentations():
                                 A.PadIfNeeded(min_height=36, min_width=36, always_apply=True),
                                 A.RandomCrop(32, 32),
                                 A.HorizontalFlip(),
-                                A.CoarseDropout(max_holes=1, max_height=16, max_width=16,  # Corrected parameters
-                                                min_holes=1, min_height=16, min_width=16,   # Corrected parameters
+                                A.CoarseDropout(max_holes=1, max_height=8, max_width=8,  # Corrected parameters
+                                                min_holes=1, min_height=8, min_width=8,   # Corrected parameters
                                                 fill_value=(0.5, 0.5, 0.5), mask_fill_value=None),
                                 A.Normalize(mean=(0.4914, 0.4822, 0.4465), std=(0.2023, 0.1994, 0.2010)),
                                 ToTensorV2()
