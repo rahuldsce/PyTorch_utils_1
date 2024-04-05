@@ -79,7 +79,7 @@ def cifar10_albumentations():
 
 def cifar10_s10_albumentations():
     AUGMENTATIONS_TRAIN = A.Compose([
-                                A.PadIfNeeded(min_height=36, min_width=36, always_apply=True)
+                                A.PadIfNeeded(min_height=36, min_width=36, always_apply=True),
                                 A.RandomCrop(32, 32),
                                 A.HorizontalFlip(),
                                 A.CoarseDropout(max_holes=1, max_height=8, max_width=8,  # Corrected parameters
